@@ -37,12 +37,17 @@ const DEFAULT_BLOCK_LIST: readonly string[] = [
  */
 export function createBotDetectionMiddleware(
   options?: BotDetectionOptions,
-): (req: Request, next: () => Response | Promise<Response>) => Response | Promise<Response> {
+): (
+  req: Request,
+  next: () => Response | Promise<Response>,
+) => Response | Promise<Response> {
   const allowNoUA = options?.allowNoUserAgent ?? false
   const extra = options?.blockList ?? []
 
   // Merge and lowercase once at construction time for fast case-insensitive matching.
-  const patterns: string[] = [...DEFAULT_BLOCK_LIST, ...extra].map((s) => s.toLowerCase())
+  const patterns: string[] = [...DEFAULT_BLOCK_LIST, ...extra].map((s) =>
+    s.toLowerCase(),
+  )
 
   return function botDetectionMiddleware(
     req: Request,

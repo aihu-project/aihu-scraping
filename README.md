@@ -1,21 +1,7 @@
 # @aihu/scraping
 
-> **Aihu** — agentic discovery and interaction, for human purpose.
-
-O(1) sliding-window rate limiter and bot-detection middleware for aihu agent services.
-
-Held-private workspace package. Not yet published to npm.
-
-> **Status:** Held private — not yet published to npm. See [v1.1 roadmap](../../docs/roadmap/SUMMARY.md) for ratification gating (e.g. RFC #56 live-binding for `@aihu/plugin` enforcement).
-
-<!-- BEGIN_HANDWRITTEN: prose -->
-_(Hand-written prose lives in this block. Replace this placeholder; everything below is auto-generated.)_
-<!-- END_HANDWRITTEN: prose -->
-
-## Install
-
-<!-- BEGIN_AUTOGEN: install -->
-<!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
+Optional, server-side controls for Aihu agent services: an O(1) in-process
+rate limiter and Fetch API-compatible bot-detection middleware.
 
 ```bash
 npm install @aihu/scraping
@@ -23,70 +9,46 @@ npm install @aihu/scraping
 bun add @aihu/scraping
 ```
 
-<sub><i>Auto-generated against `@aihu/scraping@0.2.0`.</i></sub>
+## Rate limiting
 
-<!-- END_AUTOGEN: install -->
+```ts
+import { createRateLimiter } from '@aihu/scraping'
 
-## Package facts
+const limiter = createRateLimiter()
+const allowed = limiter.checkRateLimit('100/min', `${verifiedSubject}:tool-name`)
+```
 
-<!-- BEGIN_AUTOGEN: stats -->
-<!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
+The limiter uses a bounded in-memory map and fails closed when it cannot
+account for a request. The store is per process; use a shared store or a
+deployment-specific adapter when quota must span multiple instances.
 
-| | |
-|---|---|
-| **Version** | `0.2.0` |
-| **Tier** | B — Meta-framework — sliding-window rate limiter + bot-detection middleware |
-| **Published files** | 3 entries |
-| **License** | MIT |
+## Bot detection
 
-<sub><i>Auto-generated against `@aihu/scraping@0.2.0`.</i></sub>
+```ts
+import { createBotDetectionMiddleware } from '@aihu/scraping'
 
-<!-- END_AUTOGEN: stats -->
+const detectBots = createBotDetectionMiddleware({ allowNoUserAgent: false })
+const response = await detectBots(request, () => new Response('OK'))
+```
 
-## Exports
+The default policy blocks common automation and scraping user-agent markers,
+including requests without a user-agent. Add application-specific substrings
+with `blockList`, or explicitly allow missing user agents when your transport
+requires it.
 
-<!-- BEGIN_AUTOGEN: exports -->
-<!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
+This package is optional. It does not install or configure an Aihu server,
+router, auth provider, or storage backend. For security-sensitive paths, derive
+rate-limit keys from a verified principal before calling the limiter.
 
-| Subpath | ESM | CJS |
-|---|---|---|
-| `.` | `./dist/index.js` | `—` |
+## Development
 
-<sub><i>Auto-generated against `@aihu/scraping@0.2.0`.</i></sub>
+```bash
+bun install --frozen-lockfile
+bun run check
+```
 
-<!-- END_AUTOGEN: exports -->
-
-## Dependencies
-
-<!-- BEGIN_AUTOGEN: deps -->
-<!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
-
-_Zero runtime dependencies_ (per the [dep-free thesis](../../README.md#project-posture))_._
-
-<sub><i>Auto-generated against `@aihu/scraping@0.2.0`.</i></sub>
-
-<!-- END_AUTOGEN: deps -->
-
-## See also
-
-<!-- BEGIN_AUTOGEN: see-also -->
-<!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
-
-- [@aihu/agent-service](../agent-service)
-- [@aihu/server](../server)
-- [Aihu framework root](../../README.md)
-
-<sub><i>Auto-generated against `@aihu/scraping@0.2.0`.</i></sub>
-
-<!-- END_AUTOGEN: see-also -->
+The published package contains only `dist`, this README, and the MIT license.
 
 ## License
 
-<!-- BEGIN_AUTOGEN: license -->
-<!-- regenerate: bun scripts/sync-readme.ts (also runs in pre-commit + CI) -->
-
-MIT — see [LICENSE](../../LICENSE).
-
-<sub><i>Auto-generated against `@aihu/scraping@0.2.0`.</i></sub>
-
-<!-- END_AUTOGEN: license -->
+MIT — see [LICENSE](LICENSE).

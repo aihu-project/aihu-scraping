@@ -1,6 +1,6 @@
 {
   "name": "@aihu/scraping",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,18 +20,29 @@
   "sideEffects": false,
   "scripts": {
     "build": "rolldown -c",
+    "check": "bun run lint && bun run typecheck && bun run test && bun run build && bun run check:package && npm pack --dry-run --ignore-scripts",
+    "check:package": "bun scripts/check-package.ts",
+    "check:release-version": "bun scripts/check-release-version.ts",
+    "lint": "biome ci .",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "bun run build"
   },
   "description": "O(1) sliding-window rate limiter and bot-detection middleware for aihu agent services.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aihu-project/aihu.git",
-    "directory": "packages/scraping"
+    "url": "git+https://github.com/aihu-project/aihu-scraping.git"
   },
-  "homepage": "https://github.com/aihu-project/aihu/tree/main/packages/scraping#readme",
-  "bugs": "https://github.com/aihu-project/aihu/issues",
+  "homepage": "https://github.com/aihu-project/aihu-scraping#readme",
+  "bugs": "https://github.com/aihu-project/aihu-scraping/issues",
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.14",
+    "rolldown": "1.0.0",
+    "rolldown-plugin-dts": "0.23.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.6"
   }
 }

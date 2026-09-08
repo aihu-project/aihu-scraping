@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createBotDetectionMiddleware, createRateLimiter } from '../src/index.ts'
+import {
+  createBotDetectionMiddleware,
+  createRateLimiter,
+} from '../src/index.ts'
 
 // ─── Rate-limiter tests ───────────────────────────────────────────────────────
 
@@ -138,7 +141,9 @@ describe('createBotDetectionMiddleware', () => {
   it('blocks a Googlebot User-Agent with 403', async () => {
     const mw = createBotDetectionMiddleware()
     const res = await mw(
-      makeRequest('Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'),
+      makeRequest(
+        'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+      ),
       next,
     )
     expect(res.status).toBe(403)

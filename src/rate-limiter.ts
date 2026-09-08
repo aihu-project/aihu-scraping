@@ -37,7 +37,9 @@ const UNIT_MS: Record<string, number> = {
 function parseRateSpec(rateSpec: string): ParsedSpec {
   const slashIdx = rateSpec.indexOf('/')
   if (slashIdx === -1) {
-    throw new Error(`@aihu/scraping: invalid rateSpec "${rateSpec}" — expected "<n>/<unit>"`)
+    throw new Error(
+      `@aihu/scraping: invalid rateSpec "${rateSpec}" — expected "<n>/<unit>"`,
+    )
   }
   const limit = parseInt(rateSpec.slice(0, slashIdx), 10)
   const unit = rateSpec.slice(slashIdx + 1)
@@ -62,7 +64,9 @@ function parseRateSpec(rateSpec: string): ParsedSpec {
  * multi-instance deployment multiplies the effective quota by instance
  * count; distributed accounting is a separate, tracked concern.
  */
-export function createRateLimiter(options?: RateLimiterOptions): RateLimitPlugin {
+export function createRateLimiter(
+  options?: RateLimiterOptions,
+): RateLimitPlugin {
   const maxKeys = options?.maxKeys ?? 100_000
   const now = options?.now ?? Date.now
 
@@ -122,7 +126,9 @@ export function createRateLimiter(options?: RateLimiterOptions): RateLimitPlugin
         return true
       } catch (err) {
         // Store/spec error — the call cannot be accounted for, so deny it.
-        console.warn(`@aihu/scraping: rate-limiter error (denying, fail-closed): ${String(err)}`)
+        console.warn(
+          `@aihu/scraping: rate-limiter error (denying, fail-closed): ${String(err)}`,
+        )
         return false
       }
     },
