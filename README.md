@@ -22,6 +22,10 @@ The limiter uses a bounded in-memory map and fails closed when it cannot
 account for a request. The store is per process; use a shared store or a
 deployment-specific adapter when quota must span multiple instances.
 
+`createRateLimitPlugin` is an alias for `createRateLimiter` (same signature
+and `RateLimitPlugin` return type) for call sites that prefer the
+plugin-factory naming convention.
+
 ## Bot detection
 
 ```ts
